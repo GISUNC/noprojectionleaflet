@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oblique Zoom</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+    <!-- <script type="text/javascript" src="L.TileLayer.Zoomify.js"></script>   -->
+<style>
+ 
+</style>
+</head>
+<body>
+    <div id="map" style="position:absolute;top:0;right:0;bottom:0;left:0; background-color: black"></div>
+    <script>
+var map = L.map('map', {
+  crs: L.CRS.Simple,
+}).setView([-.5, .43], 9);
+
+L.tileLayer('https://cartocollective.blob.core.windows.net/vieques/oblique/View9/{z}/{x}_{y}.png', {
+
+        // L.tileLayer('/Users/javierarce/Downloads/MagickSlicer-master/View_036_files/{z}/{x}_{y}.png', {
+    attribution: 'Archivo Histórico de Vieques - Colección Bonnie Donohue',
+    minZoom: 0,
+    maxZoom: 14,
+    maxNativeZoom: 11,
+    tileSize: 256,
+}).addTo(map);
+
+map.attributionControl.setPrefix('');
+
+
+    </script>
+</body>
+</html>

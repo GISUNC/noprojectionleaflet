@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+    <script type="text/javascript" src="L.TileLayer.Zoomify.js"></script>  
+<style>
+ 
+</style>
+</head>
+<body>
+<!-- This method will be useful if we need to measure to scale a map that has no georeference but that it has a scale.  -->
+    <!-- obtained from https://gis.stackexchange.com/questions/200865/leaflet-crs-simple-custom-scale -->
+<div id="map" style="position:absolute;top:0;right:0;bottom:0;left:0; background-color: black"></div>
+    
+    <script>
+     var factorx = 1
+var factory = -1
+
+L.CRS.pr = L.extend({}, L.CRS.Simple, {
+  projection: L.Projection.LonLat,
+  transformation: new L.Transformation(factorx, 0, -factory, 0),
+  // Changing the transformation is the key part, everything else is the same. By specifying a factor, you specify what distance in meters one pixel occupies (as it still is CRS.Simple in all other regards). In this case, I have a tile layer with 256px pieces, so Leaflet thinks it's only 256 meters wide. I know the map is supposed to be 2048x2048 meters, so I specify a factor of 0.125 to multiply in both directions. In the actual roject, I compute all that from the gdal2tiles tilemapresources.xml, which gives the necessary information about tilesizes, total bounds and units-per-pixel at different levels.
+
+
+// Scale, zoom and distance are entirely unchanged from CRS.Simple
+  scale: function(zoom) {
+    return Math.pow(2, zoom);
+  },
+
+  zoom: function(scale) {
+    return Math.log(scale) / Math.LN2;
+  },
+
+  distance: function(latlng1, latlng2) {
+    var dx = latlng2.lng - latlng1.lng,
+      dy = latlng2.lat - latlng1.lat;
+
+    return Math.sqrt(dx * dx + dy * dy);
+  },
+
+  infinite: true
+});
+
+var map = L.map('map', {
+  crs: L.CRS.pr
+}).setView([.5, .43], 9);
+
+        // var map = L.map('map', 
+        // {crs: L.CRS.Simple}
+        // )
+        // .setView([0, 0], 10 );
+        L.tileLayer('https://cartocollective.blob.core.windows.net/vieques/oblique/View9/{z}/{x}_{y}.png', {
+    attribution: 'Carolina Cartography Collective',
+    minZoom: 0,
+    maxNativeZoom: 11, // this is important if I want to allow the viewer to zoom beyond the actual zoom 
+    maxZoom: 18,
+}).addTo(map);
+
+
+// lat: -0.0074615478515625
+// ​
+// lng: 0.0069446563720703125
+// var map = L.map('map', {
+//             crs: L.CRS.Simple,
+//         })
+//         .setView([0, 0], 12);
+//         ;
+
+
+// var map = L.map('map')
+// var map = L.map('map', {
+//             crs: L.CRS.Simple,
+//         }).setView(new L.LatLng(0,0), 12);
+
+// L.tileLayer.zoomify('/Users/javierarce/Downloads/MagickSlicer-master/View_036_files/{z}/{x}_{y}.png', { 
+//     width: 100000000, 
+//     height: 10000000000,
+//     minZoom: 12,
+//     maxZoom: 18,
+//     tileSize: 256,
+
+// }).addTo(map);
+
+    </script>
+</body>
+</html>
